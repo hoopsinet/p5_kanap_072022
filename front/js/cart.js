@@ -28,13 +28,13 @@ function getCart() {
 
  function displayCart(kanaps){
     let cart = getCart();
-    for (let kanap of kanaps) {  
+  
         if(cart) {
         // pour chaque produit du cart
             for (let i=0 ; i < cart.length ; i++) {
                 let product = cart[i];  
-                let index = cart.find(product => product.id === kanap._id)
-                    if(index) {
+                let kanap = kanaps.filter((kanap) => kanap._id == product.id)[0]
+                
                         document.querySelector(`#cart__items`).innerHTML += ` <article class="cart__item" data-id="${product.id}" data-color="${product.color}">
                                                                                 <div class="cart__item__img">
                                                                                 <img src="${kanap.imageUrl}" alt="Photographie d'un canapé">
@@ -58,8 +58,8 @@ function getCart() {
                                                                             </article>`
                     } 
             }
-        }
-    }
+        
+    
 
 }
 
