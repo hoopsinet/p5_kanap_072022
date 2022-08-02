@@ -40,6 +40,38 @@ function getkanaps() {
           });
 
 
-    }     
+    }  
+    function addToCart () {
+        //    on oblige la personne à remplir la couleur et la quantité
+            if (!document.querySelector(`#colors`).value || !document.querySelector(`#quantity`).value || document.querySelector(`#quantity`).value == 0) {
+            return alert(`un champ n'a pas été renseigné`) 
+            }
+            // on rappelle notre constant kanapId de cart.js
+            const urlParams = new URLSearchParams(window.location.search);
+            const kanapId = urlParams.get('id');
+            let item = {
+                id: kanapId,
+                color: document.querySelector('#colors').value,
+                quantity: parseInt(document.querySelector('#quantity').value)
+            }
+        
+            let cart = localStorage.getItem('cart')
+            if (!cart) {
+                cart = []
+            } else {
+                cart = JSON.parse(cart);   
+            }
+            console.log(cart);
+            // Rechercher la position d'un element existant du cart
+            let index = cart.findIndex(elt => elt.color === item.color && elt.id === item.id)
+            if (index !== -1) {
+                cart[index].quantity += item.quantity
+            }else {
+                cart.push(item);
+            } 
+            localStorage.setItem('cart', JSON.stringify(cart));
+            return alert ('Votre produit a bien été ajouté au cart !');
+        }   
 getkanaps();
+document.querySelector('#addToCart').addEventListener('click', addToCart); 
 // displaykanap();
