@@ -267,7 +267,7 @@ lastName.addEventListener("input" , function (e) {
           console.log(valueEmail);
         }
         // 1 seule conditions pour toutes les erreurs
-        if (!e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) &&  e.target.value.length == 0) {
+        if (!e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) &&  !e.target.value.length == 0) {
           emailErrorMsg.innerHTML = "Email incorrect ex: hoopsi@gmail.com"
           valueEmail = null;
         }
