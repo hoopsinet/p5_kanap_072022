@@ -261,13 +261,15 @@ lastName.addEventListener("input" , function (e) {
           console.log(valueEmail);
         }
         // ecriture avec @ avec . [Fr.com.etc...]
-        else if (e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+        else if (e.target.value.match(/^[a-z0-9.-]+@[a-z0-9.-]{2,}[.][a-z]{2,4}$/)) {
           emailErrorMsg.innerHTML = ""
           valueEmail = e.target.value;
           console.log(valueEmail);
         }
         // 1 seule conditions pour toutes les erreurs
-        if (!e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) &&  !e.target.value.length == 0) {
+        if (!e.target.value.match(/^[a-z0-9.-]+@[a-z0-9.-]{2,}[.][a-z]{2,4}$/) && 
+            !e.target.value.length == 0
+         ) {
           emailErrorMsg.innerHTML = "Email incorrect ex: hoopsi@gmail.com"
           valueEmail = null;
         }
