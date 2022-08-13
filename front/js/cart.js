@@ -1,41 +1,46 @@
 getKanaps();
-getCart();    
+getCart();
 changeQuantity();
 getNumberProduct();
 getTotalPrice();
 
 //  On récupére un " item "
 function getCart() {
-     let cart = localStorage.getItem("cart");
-     if(cart == null) {
-        return [];
-   } else {
-    return JSON.parse(cart)
-    }
- }
- function getKanaps() {
-    return fetch (`http://localhost:3000/api/products`)
-    .then (function (response) {
-        return response.json()
+  let cart = localStorage.getItem("cart");
+  if (cart == null) {
+    return [];
+  } else {
+    return JSON.parse(cart);
+  }
+}
+function getKanaps() {
+  return fetch(`http://localhost:3000/api/products`)
+    .then(function (response) {
+      return response.json();
     })
-    .then (function (kanaps) {
-        displayCart(kanaps)
+    .then(function (kanaps) {
+      displayCart(kanaps);
     })
-    .catch (function (error) {
-        alert (error)
-    })
- }
+    .catch(function (error) {
+      alert(error);
+    });
+}
 
- function displayCart(kanaps){
-    let cart = getCart();
-  
-        if(cart) {
-        // pour chaque produit du cart
-            for (let i=0 ; i < cart.length ; i++) {
-                let product = cart[i];  
-                let kanap = kanaps.filter((kanap) => kanap._id == product.id)[0]
-                
-                        document.querySelector(`#cart__items`).innerHTML += ` <article class="cart__item" data-id="${product.id}" data-color="${product.color}">
+function displayCart(kanaps) {
+  let cart = getCart();
+  document.querySelector(`#cart__items`).innerHTML = ``;
+  if (cart) {
+    // Initialisation d'un tableau dans lequel je retrouve les prix totaux des produits. (quantité * prix)
+    let prices = [];
+    // pour chaque produit du cart
+    let quantity = 0;
+    for (let i = 0; i < cart.length; i++) {
+      let product = cart[i];
+      let kanap = kanaps.filter((kanap) => kanap._id == product.id)[0];
+
+      document.querySelector(
+        `#cart__items`
+      ).innerHTML += ` <article class="cart__item" data-id="${product.id}" data-color="${product.color}">
                                                                                 <div class="cart__item__img">
                                                                                 <img src="${kanap.imageUrl}" alt="Photographie d'un canapé">
                                                                                 </div>
@@ -55,83 +60,72 @@ function getCart() {
                                                                                     </div>
                                                                                 </div>
                                                                                 </div>
-                                                                            </article>`
-                    } 
-            }
-        
-    
-            let deleteItem = document.querySelectorAll('.deleteItem');
-            for(let i = 0 ; i < deleteItem.length ; i++) {
-                deleteItem[i].addEventListener('click' , () => removeFromCart(i));
+                                                                            </article>`;
+
+      let price = product.quantity * kanap.price;
+      prices.push(price);
+    }
+    // Methode reduce() pour calculer le total des valeurs dans le tableau [prices]
+    let total = (accumulator, current) => accumulator + current;
+            let totalPrices = prices.reduce(total);
+            document.querySelector("#totalPrice").textContent += totalPrices
+  }
+  let deleteItem = document.querySelectorAll(".deleteItem");
+  for (let i = 0; i < deleteItem.length; i++) {
+    deleteItem[i].addEventListener("click", () => removeFromCart(i));
+
+let itemQuantity = document.querySelectorAll(".itemQuantity");
+            for(let i = 0 ; i < itemQuantity.length ; i++) {
+                itemQuantity[i].addEventListener('click' , () => changeQuantity(i));
             }
 }
-
-
+}
 //  REtirer du cart
 async function removeFromCart(product) {
-    let cart = getCart();
-    cart.splice(product , 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    document.location.reload();  
+  let cart = getCart();
+  cart.splice(product, 1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  getKanaps();
 }
-async function changeQuantity(product, quantity) {
-    //je récupère le contenu du localStorage (le panier =cart)
-    let cart = getCart();
+// Afficher le total d'article dans le panier
+let totalQuantity = getNumberProduct();
+document.querySelector("#totalQuantity").textContent += totalQuantity;
+//  Fonction qui enclenche l'addition du total des produits dans le panier
+ function getNumberProduct() {
+  let cart = getCart()
+  let number = 0;
+  for (let product of cart) {
+      number += product.quantity;
+  }
+  return number;
+  }
 
-    // (i = index j'initialise à 0 et le travail se fait temps qu'il y a des produits dans le panier)
-    for(let i = 0 ; i < cart.length ; i++) {
-        // un produit e, particulier dans le panier, i étant sa place dans le panier = son index
-        let product = cart[i];
-        // la quantité du produit dans le panier (ou localStorage)
-        let quantity = product.quantity;
-        // récupère le "bouton" selon son index qui permet à l'utilisateur de changer la quantité
-        let quantityChange = document.querySelectorAll('.itemQuantity')[i];
-        //la valeur qui a pu (ou non) être changée
-        let userQuantityChange = quantityChange.value;
-        // retrouver dans le panier(localStorage) l'id correspondant au produit dont la quantité est modifiable
-        let foundProduct = cart.find(p => p.id == product.id);
-
-        if(foundProduct) {
-            quantity = userQuantityChange;
-            if(userQuantityChange <= 0) {
-                removeFromCart(foundProduct);
-            }
-                localStorage.setItem('cart', JSON.stringify(cart));
-                document.location.reload();  
-        }
-    }
+// Ne marche pas ! (fonctionne que sur le premier)
+function changeQuantity() {
+  let cart = getCart();
+  let quantity = document.querySelectorAll(".itemQuantity")
+      for(let i = 0 ; i < quantity.length ; i++) {
+          quantity = parseInt(quantity[i].value);
+          cart[i].quantity = quantity;
+          localStorage.setItem('cart', JSON.stringify(cart)); 
+      }
 }
 
-// Calculer le total de produit dans le cart
-    function getNumberProduct() {
-    let cart = getCart()
-    let number = 0;
+// Calculer le prix total du cart
+    function getTotalPrice() {
+    let cart = getCart();
+    let total = 0;
     for (let product of cart) {
-        number += product.quantity;
+        total += product.quantity * product.price;
+        localStorage.setItem('cart', JSON.stringify(cart))
     }
-    return number;
+    return total;
     }
-// // Calculer le prix total du cart
-//     function getTotalPrice() {
-//     let cart = getCart();
-//     let number = 0;
-//     for (let product of cart) {
-//         number += product.quantity * product.price;
-//         localStorage.setItem('cart')
-//     }
-//     return number;
-//     }
-    // Changer la quantité du cart
-
-
-//  REtirer du cart
-// function removeFromCart(product){
-//     let cart = getCart();
-//     cart = cart.filter(p => p.id != product.id);
-//     localStorage.setItem('cart'), JSON.stringify(cart)
-//     displayCart(kanap)
-// }
+// Changer la quantité du cart
 
 
 // ajoutez un eventlistener pour le formulaire.
 //  si il est bien rempli faire appel à l'api
+
+
+//chaine de caractére (spéciaux ou non) obligatoire un @ >> Domain (hotmail/gmail)  .  3caractére (com/fr)  reggex
