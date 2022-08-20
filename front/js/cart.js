@@ -211,9 +211,9 @@ lastName.addEventListener("input" , function (e) {
 
 
  function order(e) {
- e.preventDefault
+ e.preventDefault();
 
-if (!FirstName.value || !valueLastName || !valueAddress || !valueCity || !valueEmail) {
+if (!firstName.value || !lastName.value || !address.value || !city.value || !email.value) {
   return
 }
 let products = getCart();
@@ -225,10 +225,10 @@ for (product of products) {
 const push = {
   contact : {
     firstName : firstName.value,
-    lastName : valueLastName, 
-    address : valueAddress,
-    city : valueCity,
-    email : valueEmail
+    lastName : lastName.value, 
+    address : address.value,
+    city : city.value,
+    email : address.value,
     },
   products : productsList
 };
@@ -241,20 +241,9 @@ const request = fetch ( 'http://localhost:3000/api/products/order', {
         },  
         body: JSON.stringify(push),
     })
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (kanaps) {
-      console.log(kanaps);
-      window.location.replace('./confirmation.html?orderId=${id}')
-    })
-    .catch(function (error) {
-      alert(error);
-    });
-}
-
-  // let response = await request.json();
+    .then((response) => response.json()) 
+      .then((data) => {
+        document.location.href = './confirmation.html?orderId=' + data.orderId + '';
+      })
+    }
  
-
-    // const orderId = await request.json();
-    // const id = await orderId;
