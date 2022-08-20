@@ -237,7 +237,7 @@ const request = fetch ( 'http://localhost:3000/order', {
         }
         
     });
-    let response = await request.json();
+    // let response = await request.json();
     window.location.replace('./confirmation.html?orderId=${id}')
 
     // const orderId = await request.json();
