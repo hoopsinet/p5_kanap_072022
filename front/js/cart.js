@@ -86,9 +86,6 @@ async function removeFromCart(product) {
   localStorage.setItem("cart", JSON.stringify(cart));
   getKanaps();
 }
-// Afficher le total d'article dans le panier
-let totalQuantity = getNumberProduct();
-document.querySelector("#totalQuantity").textContent += totalQuantity;
 //  Fonction qui enclenche l'addition du total des produits dans le panier
  function getNumberProduct() {
   let cart = getCart()
@@ -213,36 +210,51 @@ lastName.addEventListener("input" , function (e) {
 
 
 
- function order() {
-  
+ function order(e) {
+ e.preventDefault
+
+if (!FirstName.value || !valueLastName || !valueAddress || !valueCity || !valueEmail) {
+  return
+}
 let products = getCart();
+let productsList = []
+for (product of products) {
+  productsList.push(product.id)
+}
 
 const push = {
   contact : {
-    firstName : valueFirstName,
+    firstName : firstName.value,
     lastName : valueLastName, 
     address : valueAddress,
     city : valueCity,
     email : valueEmail
     },
-  products
+  products : productsList
 };
 console.log(push)
 
-const request = fetch ( 'http://localhost:3000/order', {
+const request = fetch ( 'http://localhost:3000/api/products/order', {
         method: 'POST',
         headers: { 
             'Content-Type':'application/json',
-            body: JSON.stringify(push),
-        }
-        
+        },  
+        body: JSON.stringify(push),
+    })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (kanaps) {
+      console.log(kanaps);
+      window.location.replace('./confirmation.html?orderId=${id}')
+    })
+    .catch(function (error) {
+      alert(error);
     });
-    // let response = await request.json();
-    window.location.replace('./confirmation.html?orderId=${id}')
+}
+
+  // let response = await request.json();
+ 
 
     // const orderId = await request.json();
     // const id = await orderId;
-    
-
-  
-}
