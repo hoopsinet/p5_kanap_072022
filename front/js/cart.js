@@ -39,20 +39,20 @@ function displayCart(kanaps) {
       document.querySelector(
         `#cart__items`
       ).innerHTML += ` <article class="cart__item" data-id="${product.id}" data-color="${product.color}">
-                                                                                <div class="cart__item__img">
-                                                                                <img src="${kanap.imageUrl}" alt="Photographie d'un canapé">
-                                                                                </div>
-                                                                                <div class="cart__item__content">
-                                                                                <div class="cart__item__content__description">
-                                                                                    <h2>${kanap.name}</h2>
-                                                                                    <p>${product.color}</p>
-                                                                                    <p>${kanap.price}</p>
-                                                                                </div>
-                                                                                <div class="cart__item__content__settings">
-                                                                                    <div class="cart__item__content__settings__quantity">
-                                                                                    <p>Qté : </p>
-                                                                                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
-                                                                                    </div>
+               <div class="cart__item__img">
+               <img src="${kanap.imageUrl}" alt="Photographie d'un canapé">
+               </div>
+               <div class="cart__item__content">
+               <div class="cart__item__content__description">
+               <h2>${kanap.name}</h2>
+               <p>${product.color}</p>
+               <p>${kanap.price}</p>
+               </div>
+               <div class="cart__item__content__settings">
+               <div class="cart__item__content__settings__quantity">
+               <p>Qté : </p>
+               <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+               </div>
                                                                                     <div class="cart__item__content__settings__delete">
                                                                                     <p class="deleteItem">Supprimer</p>
                                                                                     </div>
@@ -124,105 +124,99 @@ const lastName = document.getElementById("lastName");
 const address = document.getElementById("address");
 const city = document.getElementById("city");
 const email = document.getElementById("email");
-
+firstName.addEventListener("change", function () {
+  validFirstName(this);
+});
+lastName.addEventListener("change", function () {
+  validLastName(this);
+});
+address.addEventListener("change", function () {
+  validAddress(this);
+});
+city.addEventListener("change", function () {
+  validCity(this);
+});
+email.addEventListener("change", function () {
+  validEmail(this);
+});
 let valueFirstName, valueLastName, valueAddress, valueCity, valueEmail;
-//************  Configuration pour l'input PRENOM ************
-firstName.addEventListener("input", function (e) {
-  // ********** e.target = à FirstName.value *********
-  valueFirstName;
-  if (e.target.value.match(/^[a-z A-Z éèê-]{3,25}$/)) {
+
+// Fonction qui verifie le prénom du formulaire
+const validFirstName = function (inputFirstName) {
+  let regexFirstName = new RegExp("^[a-zA-Z]+(([,.éèâ -][a-zA-Z ])?[a-zA-Z])$");
+  let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
+
+  if (regexFirstName.test(inputFirstName.value) == true) {
     firstNameErrorMsg.innerHTML = "";
-    valueFirstName = e.target.value;
-    console.log("ça marche");
-    console.log(valueFirstName);
+    return true;
   } else {
-    firstNameErrorMsg.innerHTML =
-      "le prénom ne doit pas contenir de caractère spécial ou de chiffre";
-    valueFirstName = null;
-    console.log("pas assez ou trop de lettres");
+    firstNameErrorMsg.innerHTML = "Prénom invalide";
+    return false;
   }
-});
+};
+//  Fonction qui verifie le Nom du formulaire
+const validLastName = function (inputLastName) {
+  let regexLastName = new RegExp("^[a-zA-Z]+(([,.éèâ -][a-zA-Z ])?[a-zA-Z])$");
+  let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
 
-lastName.addEventListener("input", function (e) {
-  // ********** e.target = à LastName.value *********
-  valueLastName;
-  if (e.target.value.match(/^[a-z A-Z éèê-]{3,25}$/)) {
+  if (regexLastName.test(inputLastName.value) == true) {
     lastNameErrorMsg.innerHTML = "";
-    valueLastName = e.target.value;
-    console.log("ça marche");
-    console.log(valueLastName);
+    return true;
   } else {
-    lastNameErrorMsg.innerHTML =
-      "le prénom ne doit pas contenir de caractère spécial ou de chiffre";
-    valueLastName = null;
-    console.log("pas assez ou trop de lettres");
+    lastNameErrorMsg.innerHTML = "Nom invalide";
+    return false;
   }
-});
+};
+// Fonction qui vérifie l'addresse
+const validAddress = function (inputAddress) {
+  let regexAddress = new RegExp("^[0-9]{1,3} [a-z A-Z éèê]{3,25}$");
+  let addressErrorMsg = document.querySelector("#addressErrorMsg");
 
-address.addEventListener("input", function (e) {
-  // ********** e.target = à address value *********
-  valueAddress;
-  if (e.target.value.match(/^[0-9]{1,3} [a-z A-Z éèê]{3,25}$/)) {
+  if (regexAddress.test(inputAddress.value) == true) {
     addressErrorMsg.innerHTML = "";
-    valueAddress = e.target.value;
-    console.log("ça marche");
-    console.log(valueAddress);
+    return true;
   } else {
     addressErrorMsg.innerHTML =
-      "l'adresse commence par des chiffres ensuite par des lettres, pas de caractére spéciaux";
-    valueAddress = null;
-    console.log("pas assez ou trop de lettres");
+      "commencer par des chiffres,ensuite par des lettres, pas de caractére spéciaux";
+    return false;
   }
-});
+};
+// Fonction du formulaire qui vérifie pour la Ville
+const validCity = function (inputCity) {
+  let regexCity = new RegExp("^[a-z A-Z éèê-]{3,25}$");
+  let cityErrorMsg = document.querySelector("#cityErrorMsg");
 
-city.addEventListener("input", function (e) {
-  // ********** e.target = à city.value *********
-  valueCity;
-  if (e.target.value.match(/^[a-z A-Z éèê-]{3,25}$/)) {
+  if (regexCity.test(inputCity.value) == true) {
     cityErrorMsg.innerHTML = "";
-    valueCity = e.target.value;
-    console.log("ça marche");
-    console.log(valueCity);
+    return true;
   } else {
     cityErrorMsg.innerHTML = "la ville doit contenir entre 3 à 25 caractéres";
-    valueCity = null;
-    console.log("pas assez ou trop de lettres");
+    return false;
   }
-});
+};
+// Fonction qui verifie l'email du formulaire
+const validEmail = function (inputEmail) {
+  let regexEmail = new RegExp("^[a-z0-9.-]+@[a-z0-9.-]{2,}[.][a-z]{2,3}$");
+  let emailErrorMsg = document.querySelector("#emailErrorMsg");
 
-email.addEventListener("input", (e) => {
-  if (e.target.value.length == 0) {
+  if (regexEmail.test(inputEmail.value) == true) {
     emailErrorMsg.innerHTML = "";
-    valueEmail = null;
-    console.log(valueEmail);
-  }
-  // ecriture avec @ avec . [Fr.com.etc...]
-  else if (e.target.value.match(/^[a-z0-9.-]+@[a-z0-9.-]{2,}[.][a-z]{2,3}$/)) {
-    emailErrorMsg.innerHTML = "";
-    valueEmail = e.target.value;
-    console.log(valueEmail);
-  }
-  // 1 seule conditions pour toutes les erreurs
-  else if (
-    !e.target.value.match(/^[a-z0-9.-]+@[a-z0-9.-]{2,}[.][a-z]{2,3}$/) &&
-    !e.target.value.length == 0
-  ) {
+    return true;
+  } else {
     emailErrorMsg.innerHTML = "Email incorrect ex: hoopsi@gmail.com";
-    valueEmail = null;
+    return false;
   }
-});
-
+};
 function order(e) {
   e.preventDefault();
-
   if (
-    !firstName.value ||
-    !lastName.value ||
-    !address.value ||
-    !city.value ||
-    !email.value
+    validFirstName(firstName) == false ||
+    validLastName(lastName) == false ||
+    validAddress(address) == false ||
+    validCity(city) == false ||
+    validEmail(email) == false
   ) {
-    return;
+    return false;
   }
   let products = getCart();
   let productsList = [];
