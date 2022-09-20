@@ -12,6 +12,7 @@ function getCart() {
     return JSON.parse(cart);
   }
 }
+// récupérer tout les kanaps de l'api
 function getKanaps() {
   return fetch(`http://localhost:3000/api/products`)
     .then(function (response) {
@@ -24,7 +25,7 @@ function getKanaps() {
       alert(error);
     });
 }
-
+// Affichage du contenue du panier (localstorage)
 function displayCart(kanaps) {
   let cart = getCart();
   document.querySelector(`#cart__items`).innerHTML = ``;
@@ -207,7 +208,9 @@ const validEmail = function (inputEmail) {
     return false;
   }
 };
+// fonction pour passer la commande
 function order(e) {
+  // on vérifie que les valeurs saisies par l'utilisateur dans le formulaire.
   e.preventDefault();
   if (
     validFirstName(firstName) == false ||
@@ -218,12 +221,13 @@ function order(e) {
   ) {
     return false;
   }
+  // création d'un tableau dans lequel on récupère l'id des produits
   let products = getCart();
   let productsList = [];
   for (product of products) {
     productsList.push(product.id);
   }
-
+//  création d'une constante ou je stock les données à envoyer à l'api (produits + info contacts)
   const push = {
     contact: {
       firstName: firstName.value,
@@ -235,8 +239,9 @@ function order(e) {
     products: productsList,
   };
   console.log(push);
-
-  const request = fetch("http://localhost:3000/api/products/order", {
+// j'envoie des données à l'api et je récupére la réponse, qu'on stock dans l'url et on bascule sur la page 
+//  de confirmation. Dont l'url contient donc la réponse de l'api (l'oder id) et on clear le local storage 
+ const request = fetch("http://localhost:3000/api/products/order", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
