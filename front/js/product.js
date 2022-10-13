@@ -14,7 +14,7 @@ function getkanaps() {
       alert(error);
     });
 }
-// fonction qui permet d'afficher les kanaps
+// fonction qui permet d'afficher de façon dynamique les infos d'un kanap selectionné
 function displaykanap(kanap) {
   const image = document.querySelector(".item__img");
   const title = document.querySelector("#title");
@@ -42,7 +42,7 @@ function addToCart() {
   if (
     !document.querySelector(`#colors`).value ||
     !document.querySelector(`#quantity`).value ||
-    document.querySelector(`#quantity`).value == 0
+    document.querySelector(`#quantity`).value <= 0
   ) {
     return alert(`un champ n'a pas été renseigné`);
   }
